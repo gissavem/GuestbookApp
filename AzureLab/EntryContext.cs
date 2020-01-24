@@ -11,8 +11,8 @@ namespace AzureLab
         private string primaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
         private string databaseName = "EntryDatabase";
 
-        public DbSet<Entries> Entries { get; set; }
-        public DbSet<Authors> Authors { get; set; }
+        public DbSet<Entry> Entries { get; set; }
+        public DbSet<Author> Authors { get; set; }
 
         public EntryContext()
         { 

@@ -12,7 +12,7 @@ namespace AzureLab
 
             using (EntryContext context = new EntryContext())
             {
-                Authors currentUser = null;
+                Author currentUser = null;
 
                 context.Database.EnsureCreated();
 
@@ -30,24 +30,12 @@ namespace AzureLab
                         case ConsoleKey.D2:
                             Console.Clear();
                             currentUser = CreateAndGetNewUser(context);
-                            //MAKE SURE THAT YOU CANNOT CREATE A USER IF THEIR USERNAME ALREADY EXISTS
                             break;
                         default:
                             Console.Clear();
                             break;
                     }
                 }
-
-  
-                //Confirm if it exists, otherwise ask send them to EXISTING USER?
-                //ASK FOR PASSWORD
-                //Confirm if correct, otherwise ask again
-
-                //Set current user to the logged in user
-
-                //currentUserName = TryUserInput();
-
-                
                 context.SaveChanges();
                 
                 while (programRunning)
@@ -73,7 +61,7 @@ namespace AzureLab
             }
         }
 
-        private static Authors TryLogin(EntryContext context)
+        private static Author TryLogin(EntryContext context)
         {
             string userName = TryLoginInput("Username");
             string password = TryLoginInput("Password");
@@ -82,16 +70,19 @@ namespace AzureLab
                         where user.UserName == userName && user.Password == password
                         select user;
 
-            if (query.Any() == false)
+            if (query.ToList().Any() == false)
+            {
+                Console.WriteLine("\nThe username or password was incorrect!");
                 return null;
+            }
 
             if (query.First().UserName == userName && query.First().Password == password)
             {
                 return query.First();
             }
 
+            Console.WriteLine("\nThe username or password was incorrect!");
             return null;
-            
         }
 
         private static string TryLoginInput(string target)
@@ -100,13 +91,21 @@ namespace AzureLab
             return Console.ReadLine();
         }
 
-        private static Authors CreateAndGetNewUser(EntryContext context)
+        private static Author CreateAndGetNewUser(EntryContext context)
         {
             string userName = TryUserInput("username");
+
+            while (CheckIfTaken(context, userName))
+            {
+                Console.WriteLine("That username is already taken, please pick another!");
+                userName = TryUserInput("username");
+                Console.Clear();
+            }
+
             string password = TryUserInput("password");
             string alias = TryUserInput("alias");
 
-            Authors author = new Authors()
+            Author author = new Author()
             {
                 Id = Guid.NewGuid().ToString(),
                 Alias = alias,
@@ -126,22 +125,40 @@ namespace AzureLab
             }
         }
 
+        private static bool CheckIfTaken(EntryContext context, string userName)
+        {
+            var query = from user in context.Authors
+                        where user.UserName == userName
+                        select user;
+            if (query.ToList().Any())
+            {
+                return true;
+            }
+            return false;
+        }
+
         private static void PrintInstructions()
         {
             Console.WriteLine(" Press 1 to leave an entry in the guestbook.\n\n Press 2 to view past entries\n\n Press 3 to quit");
         }
-        private static void AddEntryToDatabase(EntryContext context, Authors currentUser)
+        private static void AddEntryToDatabase(EntryContext context, Author currentUser)
         {
             Console.Clear();
             var user = context.Authors.Find(currentUser.Id);
-            Entries userEntry = new Entries()
+            Entry userEntry = new Entry()
             {
                 Id = Guid.NewGuid().ToString(),
                 DateOfEntry = DateTime.Now,
                 EntryText = TryEntryInput()
             };
-            if (user.AuthorEntries == null) user.AuthorEntries = new List<Entries> { userEntry };
-
+            if (user.Entries == null)
+            {
+                user.Entries = new List<Entry> { userEntry };
+            }
+            else
+            {
+                user.Entries.Add(userEntry);
+            }
             context.SaveChanges();
             Console.Clear();
             Console.WriteLine("Thank you for your entry!");
@@ -206,7 +223,8 @@ namespace AzureLab
                         Console.WriteLine();
                         throw new Exception($"Your {target} cannot exceed 12 characters..");
                     }
-                    stringToReturn = input;                    
+                    stringToReturn = input;
+                    Console.Clear();
                 }
                 catch (Exception ex)
                 {
