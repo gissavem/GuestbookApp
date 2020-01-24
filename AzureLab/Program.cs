@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BCrypt.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +14,6 @@ namespace AzureLab
             using (EntryContext context = new EntryContext())
             {
                 Author currentUser = null;
-
                 context.Database.EnsureCreated();
 
                 while (currentUser == null)
@@ -63,11 +63,12 @@ namespace AzureLab
 
         private static Author TryLogin(EntryContext context)
         {
-            string userName = TryLoginInput("Username");
-            string password = TryLoginInput("Password");
+            string userName = TryUsername();
+            string password = TryPassword();
+            
 
             var query = from user in context.Authors
-                        where user.UserName == userName && user.Password == password
+                        where user.UserName == userName
                         select user;
 
             if (query.ToList().Any() == false)
@@ -75,8 +76,7 @@ namespace AzureLab
                 Console.WriteLine("\nThe username or password was incorrect!");
                 return null;
             }
-
-            if (query.First().UserName == userName && query.First().Password == password)
+            if (query.First().UserName == userName && BCrypt.Net.BCrypt.Verify(password, query.First().Password))
             {
                 return query.First();
             }
@@ -85,9 +85,25 @@ namespace AzureLab
             return null;
         }
 
-        private static string TryLoginInput(string target)
+        private static string TryPassword()
         {
-            Console.WriteLine($"please enter your {target}");
+            Console.Write($"please enter your password: ");
+            string password = null;
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter)
+                    break;
+                password += key.KeyChar;
+                Console.Write("*");
+            }
+            Console.Clear();
+            return password;
+        }
+
+        private static string TryUsername()
+        {
+            Console.Write($"please enter your username: ");
             return Console.ReadLine();
         }
 
@@ -103,6 +119,8 @@ namespace AzureLab
             }
 
             string password = TryUserInput("password");
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+
             string alias = TryUserInput("alias");
 
             Author author = new Author()
@@ -110,7 +128,7 @@ namespace AzureLab
                 Id = Guid.NewGuid().ToString(),
                 Alias = alias,
                 UserName = userName,
-                Password = password
+                Password = passwordHash
             };
             try
             {
@@ -206,13 +224,23 @@ namespace AzureLab
 
         private static string TryUserInput(string target)
         {
+
             string stringToReturn = null;
             while (stringToReturn == null)
             {
                 try
                 {
-                    Console.WriteLine($"Please enter {target}:");
-                    string input = Console.ReadLine().Trim();
+                    string input = null;
+
+                    if (target == "password")
+                    {
+                        input = TryPassword();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Please enter {target}:");
+                        input = Console.ReadLine().Trim();
+                    }
                     if (input == null || input == "")
                     {
                         Console.WriteLine();
