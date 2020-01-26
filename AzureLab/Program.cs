@@ -13,6 +13,9 @@ namespace AzureLab
 
             using (EntryContext context = new EntryContext())
             {
+                var menuManager = new MenuManager();
+                menuManager.ShowMainMenu();
+
                 Author currentUser = null;
                 context.Database.EnsureCreated();
 
@@ -65,7 +68,6 @@ namespace AzureLab
         {
             string userName = TryUsername();
             string password = TryPassword();
-            
 
             var query = from user in context.Authors
                         where user.UserName == userName
