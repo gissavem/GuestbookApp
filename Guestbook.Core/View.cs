@@ -6,12 +6,8 @@ using System.Linq;
 
 namespace Guestbook.Core
 {
-    internal class View
+    public class View
     {
-        public View()
-        {
-        }
-        public Action<string> SendToController { get; set; }
         public Func<string, Result> ValidationMethod { get; set; }
         public Func<string> GetInput { get; set; }
         public void PrintWelcome()
