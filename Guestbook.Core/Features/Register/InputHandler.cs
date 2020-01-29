@@ -1,7 +1,7 @@
 ﻿using System;
 using Guestbook.Core.Features.Register;
 
-namespace Guestbook.Console.Features.Register
+namespace Guestbook.Core.Features.Register
 {
     public class InputHandler
     {

@@ -98,7 +98,7 @@ namespace Guestbook.Core.Features.Register
 
         private bool UsernameIsUnique(string userName)
         {
-            var query = _context.Authors.Where(user => user.UserName == userName);
+            var query = _context.Authors.Where(user => user.Username == userName);
 
             return !query.ToList().Any();
         }

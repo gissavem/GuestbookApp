@@ -20,7 +20,7 @@ namespace Guestbook.Core.Entities
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(passwordHash));
             if (string.IsNullOrWhiteSpace(alias))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(alias));
-            UserName = userName;
+            Username = userName;
             PasswordHash = passwordHash;
             Alias = alias;
             Id = Guid.NewGuid().ToString();
@@ -28,7 +28,7 @@ namespace Guestbook.Core.Entities
         [Column("id")]
         public string Id { get; set; }
         public string Alias { get; set; }
-        public string UserName { get; set; }
+        public string Username { get; set; }
         public string PasswordHash { get; set; }
         public virtual ICollection<Entry> Entries { get; set; }
     }

@@ -16,7 +16,7 @@ namespace Guestbook.Core.Features.Login
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             
-            var query = _context.Authors.Where(a => a.UserName == command.Username);
+            var query = _context.Authors.Where(a => a.Username == command.Username);
 
             var author = query.SingleOrDefault();
             
