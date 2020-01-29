@@ -57,7 +57,7 @@ namespace Guestbook.Console.Features.Register
                 System.Console.Write($"please enter your username: ");
                 username = System.Console.ReadLine();
 
-                var validationResult = validateAction(username);//_inputValidator.ValidateUsername(username);
+                var validationResult = _inputValidator.ValidateUsername(username);
 
                 tryAgain = !validationResult.Success;
 

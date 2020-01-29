@@ -11,7 +11,9 @@ namespace Guestbook.Core.Features.Register
         {
             _inputValidator = inputValidator ?? throw new ArgumentNullException(nameof(inputValidator));
         }
-
+        /*
+         THE CONTENTS OF THIS CLASS IS NOW MOVED TO VIEW/CONTROLLER
+             */
         public Input Handle()
         {
             var input = new Input()
@@ -57,7 +59,7 @@ namespace Guestbook.Core.Features.Register
                 System.Console.Write($"please enter your username: ");
                 username = System.Console.ReadLine();
 
-                var validationResult = validateAction(username);//_inputValidator.ValidateUsername(username);
+                var validationResult = _inputValidator.ValidateUsername(username);
 
                 tryAgain = !validationResult.Success;
 
