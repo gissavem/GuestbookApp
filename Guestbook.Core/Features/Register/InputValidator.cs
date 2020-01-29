@@ -7,6 +7,7 @@ namespace Guestbook.Core.Features.Register
 {
     public class InputValidator
     {
+        private const int MaxEntryTextLength = 140;
         private readonly EntryContext _context;
 
         public InputValidator(EntryContext context)
@@ -81,6 +82,25 @@ namespace Guestbook.Core.Features.Register
 
             return result;
         }
+        public Result ValidateEntryText(string entryText)
+        {
+            var result = new Result();
+
+            if (string.IsNullOrWhiteSpace(entryText))
+            {
+                result.ValidationMessages.Add("You cannot enter an empty string as an entry.");
+                result.Success = false;
+                return result;
+            }
+
+            if (!ValidateEntryTextLength(entryText))
+            {
+                result.ValidationMessages.Add("Your entry cannot exceed 140 characters.");
+                result.Success = false;
+            }
+
+            return result;
+        }
 
         private bool ValidateAliasLength(string alias)
         {
@@ -110,7 +130,14 @@ namespace Guestbook.Core.Features.Register
 
             return password.Length <= maxPasswordLength;
         }
+        
+
+        private bool ValidateEntryTextLength(string entryText)
+        {
+            return entryText.Length <= MaxEntryTextLength;
+        }
     }
+
 
     public class Result
     {

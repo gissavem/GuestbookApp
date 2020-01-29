@@ -1,6 +1,8 @@
-﻿using Guestbook.Core.Features.Login;
+﻿using Guestbook.Core.Entities;
+using Guestbook.Core.Features.Login;
 using Guestbook.Core.Features.Register;
 using System;
+using System.Linq;
 
 namespace Guestbook.Core
 {
@@ -19,6 +21,10 @@ namespace Guestbook.Core
         public void PrintLoginMenu()
         {
             Console.WriteLine("If you are an existing user press 1, to register a new user press 2, to quit press 3.");
+        }
+        public void PrintMainMenu()
+        {
+            Console.WriteLine(" Press 1 to leave an entry in the guestbook.\n\n Press 2 to view past entries\n\n Press 3 to log off");
         }
         public ConsoleKey GetConsoleKey()
         {
@@ -78,6 +84,26 @@ namespace Guestbook.Core
             }
             Console.Clear();
             return password;
+        }
+
+        public void PrintAllEntries(IOrderedQueryable<Entry> entries)
+        {
+            foreach (var entry in entries)
+            {
+                Console.Write(entry.DateOfEntry.ToString("dddd, dd MMMM yyyy HH:mm:ss"));
+                Console.WriteLine($", {entry.Author.Alias} wrote:\n   {entry.EntryText}\n");
+            }
+        }
+
+        public void ConfirmEntry()
+        {
+            Console.WriteLine("Thank you for your entry!");
+        }
+
+        public string GetEntry()
+        {
+            Console.Write($"please write your entry: ");
+            return Console.ReadLine();
         }
 
         public string GetUsername()

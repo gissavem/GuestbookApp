@@ -33,8 +33,6 @@ namespace Guestbook.Core.Features.Entries
                 currentAuthor.Entries.Add(authorEntry);
             }
             _context.SaveChanges();
-            System.Console.Clear();
-            System.Console.WriteLine("Thank you for your entry!");
             
         }
   

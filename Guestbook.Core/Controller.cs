@@ -1,6 +1,7 @@
 ﻿using Guestbook.Core.Entities;
 using Guestbook.Core.Persistance;
 using System;
+using System.Linq;
 
 namespace Guestbook.Core
 {
@@ -41,6 +42,47 @@ namespace Guestbook.Core
                         break;
                 }
             }
+            while (CurrentAuthor != null) 
+            {
+                view.PrintMainMenu();
+
+                switch (view.GetConsoleKey())
+                {
+                    case ConsoleKey.D1:
+                        view.Clear();
+                        TryCreateEntry();
+                        break;
+                    case ConsoleKey.D2:
+                        view.Clear();
+                        view.PrintAllEntries(GetAllEntries()); 
+                        TryCreateUser();
+                        break;
+                    case ConsoleKey.D3:
+                        CurrentAuthor = null;
+                        return;
+                    default:
+                        break;
+                }
+
+            }
+        }
+
+        private IOrderedQueryable<Entry> GetAllEntries()
+        {
+            return from entry in context.Entries
+                        orderby entry.DateOfEntry ascending
+                        select entry;
+        }
+
+        private void TryCreateEntry()
+        {
+            view.GetInput = view.GetEntry;
+            view.ValidationMethod = inputValidator.ValidateEntryText;
+            var entryText = view.TryGetUserInput();
+            var command = new Features.Entries.Command(entryText, CurrentAuthor); 
+            new Features.Entries.CommandHandler(context).Handle(command);
+            view.Clear();
+            view.ConfirmEntry();
         }
 
         private void TryCreateUser()
