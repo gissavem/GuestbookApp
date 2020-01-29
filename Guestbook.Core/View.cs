@@ -18,11 +18,11 @@ namespace Guestbook.Core
         {
             Console.WriteLine("Welcome to this guestbook!");
         }
-        public void PrintLoginMenu()
+        public void PrintLoginMenuInstructions()
         {
             Console.WriteLine("If you are an existing user press 1, to register a new user press 2, to quit press 3.");
         }
-        public void PrintMainMenu()
+        public void PrintMainMenuInstructions()
         {
             Console.WriteLine(" Press 1 to leave an entry in the guestbook.\n\n Press 2 to view past entries\n\n Press 3 to log off");
         }

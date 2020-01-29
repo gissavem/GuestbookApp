@@ -18,33 +18,50 @@ namespace Guestbook.Core
             inputValidator = new Features.Register.InputValidator(context);
         }
         private Author CurrentAuthor { get; set; }
+        private bool Running { get; set; }
 
         public void Run()
         {
+            Running = true;
             view.PrintWelcome();
+            while (Running)
+            {
+                WaitForLogin();
+                view.Clear();
+                WaitForUserInput();
+                view.Clear();
+            }
+        }
 
+        private void WaitForLogin()
+        {
             while (CurrentAuthor == null)
             {
-                view.PrintLoginMenu();
+                view.PrintLoginMenuInstructions();
+
                 switch (view.GetConsoleKey())
                 {
                     case ConsoleKey.D1:
                         view.Clear();
-                        TryLoginRequest();
+                        TryLogin();
                         break;
                     case ConsoleKey.D2:
                         view.Clear();
                         TryCreateUser();
                         break;
                     case ConsoleKey.D3:
+                        Running = false;
                         return;
                     default:
                         break;
                 }
             }
-            while (CurrentAuthor != null) 
+        }
+        private void WaitForUserInput()
+        {
+            while (CurrentAuthor != null)
             {
-                view.PrintMainMenu();
+                view.PrintMainMenuInstructions();
 
                 switch (view.GetConsoleKey())
                 {
@@ -54,7 +71,7 @@ namespace Guestbook.Core
                         break;
                     case ConsoleKey.D2:
                         view.Clear();
-                        view.PrintAllEntries(GetAllEntries()); 
+                        view.PrintAllEntries(GetAllEntries());
                         TryCreateUser();
                         break;
                     case ConsoleKey.D3:
@@ -63,7 +80,6 @@ namespace Guestbook.Core
                     default:
                         break;
                 }
-
             }
         }
 
@@ -105,7 +121,7 @@ namespace Guestbook.Core
             new Core.Features.Register.CommandHandler(context).Handle(command);
         }
 
-        private void TryLoginRequest()
+        private void TryLogin()
         {
             var input = view.GetLoginInput();
             var command = new Features.Login.Command(input.Password, input.Username); 
