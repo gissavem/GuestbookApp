@@ -14,7 +14,9 @@ namespace Guestbook.Core
         private LoginView loginView;
         private MultiChoiceMenuView menuView;
         private InfoMessageView messageView;
-        private CreateUserView createUserView;
+        private RegisterUserView registerUserView;
+        private PostEntryView postEntryView;
+        
 
         public Controller(EntryContext context)
         {
@@ -22,7 +24,7 @@ namespace Guestbook.Core
             inputValidator = new InputValidator(context);
 
         }
-        private Author CurrentAuthor { get; set; }
+        public Author CurrentAuthor { get; set; }
 
         public void Run()
         {
@@ -34,36 +36,52 @@ namespace Guestbook.Core
             InitializeMainMenu();
             messageView.Display();
         }
-
         private void GoToLoginMenu()
         {
             InitializeLoginMenu();
-            menuView.DisplayMultiChoiceMenu();
+            menuView.Display();
         }
         private void GoToLoginView()
         {
             InitializeLoginView();
-            loginView.DisplayLoginView();
+            loginView.Display();
         }
         private void GoToUserInterface()
         {
             InitializeUserInterfaceMenu();
-            menuView.DisplayMultiChoiceMenu();
+            menuView.Display();
         }
         private void GoToCreateUserView()
         {
-            InitializeCreateUserView();
-            createUserView.DisplayCreateUserView();
+            InitializeRegisterUserView();
+            registerUserView.Display();
+        }
+        private void GoToPostEntryView()
+        {
+            InitializePostEntryView();
+            postEntryView.Display();
+        }
+        private void GoToDisplayAllEntriesView()
+        {
+            throw new NotImplementedException();
         }
 
-        private void InitializeCreateUserView()
+        private void InitializePostEntryView()
         {
-            createUserView = new CreateUserView();
-            createUserView.UsernameValidation = inputValidator.ValidateUsername;
-            createUserView.PasswordValidation = inputValidator.ValidatePassword;
-            createUserView.AliasValidation = inputValidator.ValidateAlias;
-            createUserView.CreateUserCallback = CreateUser;
-            createUserView.NextView = GoToLoginMenu;
+            postEntryView.EntryValidation = inputValidator.ValidateEntryText;
+            postEntryView.PostEntryCallback = AddEntryToDatabase;
+            postEntryView.NextView = GoToUserInterface;
+        }
+
+
+        private void InitializeRegisterUserView()
+        {
+            registerUserView = new RegisterUserView();
+            registerUserView.UsernameValidation = inputValidator.ValidateUsername;
+            registerUserView.PasswordValidation = inputValidator.ValidatePassword;
+            registerUserView.AliasValidation = inputValidator.ValidateAlias;
+            registerUserView.RegisterUserCallback = CreateUser;
+            registerUserView.NextView = GoToLoginMenu;
 
         }
 
@@ -107,13 +125,12 @@ namespace Guestbook.Core
             {
                 new NavigationMenuItem()
                 {
-                    //GoesTo = TryCreateEntry,
+                    GoesTo = GoToPostEntryView,
                     DisplayString = "write a new entry"
                 },
                 new NavigationMenuItem()
                 {
-                    //Goes to view.PrintAllEntries(GetAllEntries());
-
+                    GoesTo = GoToDisplayAllEntriesView,
                     DisplayString = "view all entries"
                 },
                 new NavigationMenuItem()
@@ -123,6 +140,7 @@ namespace Guestbook.Core
                 }
             };
         }
+
         private void InitializeLoginView()
         {
             loginView = new LoginView();
@@ -166,6 +184,25 @@ namespace Guestbook.Core
             result.ValidationMessages.Add("Invalid username or password.");
             return result;
         }
+        private void AddEntryToDatabase(string entryText)
+        {
+            var entryToAdd = new Entry()
+            {
+                Id = Guid.NewGuid().ToString(),
+                DateOfEntry = DateTime.Now,
+                EntryText = entryText
+            };
+            if (CurrentAuthor.Entries == null)
+            {
+                CurrentAuthor.Entries = new List<Entry> { entryToAdd };
+            }
+            else
+            {
+                CurrentAuthor.Entries.Add(entryToAdd);
+            }
+            context.SaveChanges();
+
+        }
         private void QuitProgram()
         {
             throw new NotImplementedException();
@@ -178,16 +215,7 @@ namespace Guestbook.Core
                         select entry;
         }
 
-        //private void TryCreateEntry()
-        //{
-        //    view.GetInput = view.GetEntry;
-        //    view.ValidationMethod = inputValidator.ValidateEntryText;
-        //    var entryText = view.TryGetUserInput();
-        //    var command = new Features.Entries.Command(entryText, CurrentAuthor); 
-        //    new Features.Entries.CommandHandler(context).Handle(command);
-        //    view.Clear();
-        //    view.ConfirmEntry();
-        //}
+
         //public void PrintAllEntries(IOrderedQueryable<Entry> entries)
         //{
         //    foreach (var entry in entries)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Guestbook.Core.Persistance;
 
-namespace Guestbook.Core.Features.Register
+namespace Guestbook.Core
 {
     public class InputValidator
     {
@@ -101,7 +101,7 @@ namespace Guestbook.Core.Features.Register
 
             return result;
         }
-        public Result ValidateLogin(Login.Input input)
+        public Result ValidateLogin(Features.Login.Input input)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
             var result = new Result();
@@ -162,10 +162,4 @@ namespace Guestbook.Core.Features.Register
         }
     }
 
-
-    public class Result
-    {
-        public bool Success { get; set; } = true;
-        public List<string> ValidationMessages { get; set; } = new List<string>();
-    }
 }

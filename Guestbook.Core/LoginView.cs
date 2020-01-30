@@ -11,7 +11,7 @@ namespace Guestbook.Core
         public Action LoginFailCallback { get; internal set; }
         public Func<Features.Login.Input, Result> LoginValidationMethod { get; set; }
 
-        public void DisplayLoginView()
+        public void Display()
         {
             var input = new Features.Login.Input()
             {

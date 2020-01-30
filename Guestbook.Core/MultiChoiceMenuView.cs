@@ -7,7 +7,7 @@ namespace Guestbook.Core
     class MultiChoiceMenuView : View
     {
         public List<NavigationMenuItem> MenuItems { get; set; }
-        public void DisplayMultiChoiceMenu()
+        public void Display()
         {
             Clear();
             DisplayNavigationMenuItems();
