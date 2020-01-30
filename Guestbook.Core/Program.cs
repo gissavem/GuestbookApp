@@ -9,7 +9,7 @@ namespace Guestbook.Core
             var view = new View();
             var context = new EntryContext();
             context.Database.EnsureCreated();
-            var controller = new Controller(context, view);
+            var controller = new Controller(context);
             controller.Run();
         }
         

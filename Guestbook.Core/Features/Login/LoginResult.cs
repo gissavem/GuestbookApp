@@ -2,7 +2,7 @@
 
 namespace Guestbook.Core.Features.Login
 {
-    public class CommandResult
+    public class LoginResult
     {
         public bool Success { get; set; }
         public Author Author { get; set; }

@@ -12,31 +12,31 @@ namespace Guestbook.Core.Features.Login
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public CommandResult Handle(Command command)
+        public LoginResult ValidateLogin(Input input)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (input == null) throw new ArgumentNullException(nameof(input));
             
-            var query = _context.Authors.Where(a => a.Username == command.Username);
+            var query = _context.Authors.Where(a => a.Username == input.Username);
 
             var author = query.SingleOrDefault();
             
             if (author == null)
             {
-                return new CommandResult()
+                return new LoginResult()
                 {
                     Success = false
                 };
             }
            
-            if (BCrypt.Net.BCrypt.Verify(command.Password, author.PasswordHash))
+            if (BCrypt.Net.BCrypt.Verify(input.Password, author.PasswordHash))
             {
-                return new CommandResult()
+                return new LoginResult()
                 {
                     Success = true,
                     Author = author
                 };
             }
-            return new CommandResult()
+            return new LoginResult()
             {
                 Success = false
             };

@@ -46,7 +46,7 @@ namespace Guestbook.Console
                             var input = new Features.Login.InputHandler().Handle(); //input detaljer
                             var command = new Core.Features.Login.Command(input.Password, input.Username); //bör vara i controllern
                             // varför modellerar vi inputen? Vi kan väl skapa ett business modell objekt direkt?
-                            var result = new Core.Features.Login.CommandHandler(context).Handle(command); //error handling
+                            var result = new Core.Features.Login.CommandHandler(context).ValidateLogin(command); //error handling
                             if (result.Success)
                             {
                                 currentAuthor = result.Author;
