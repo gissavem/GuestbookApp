@@ -16,7 +16,7 @@ namespace Guestbook.Core
         private InfoMessageView messageView;
         private RegisterUserView registerUserView;
         private PostEntryView postEntryView;
-        
+        private DisplayEntriesView displayEntriesView;
 
         public Controller(EntryContext context)
         {
@@ -63,11 +63,36 @@ namespace Guestbook.Core
         }
         private void GoToDisplayAllEntriesView()
         {
-            throw new NotImplementedException();
+            InitializeDisplayAllEntriesView();
+            displayEntriesView.Display();
+        }
+        private void GoToLogOutUserView()
+        {
+            InitializeLogOutUserView();
+            messageView.Display();
+        }
+
+        private void InitializeLogOutUserView()
+        {
+            CurrentAuthor = null;
+            messageView = new InfoMessageView()
+            {
+                Message = "You are now logged out",
+                NextView = GoToMainMenu
+            };
+        }
+
+        private void InitializeDisplayAllEntriesView()
+        {
+            displayEntriesView = new DisplayEntriesView();
+            displayEntriesView.DisplayMessage = "Displaying all past entries by date in descending order";
+            displayEntriesView.Entries = GetAllEntries();
+            displayEntriesView.NextView = GoToUserInterface;
         }
 
         private void InitializePostEntryView()
         {
+            postEntryView = new PostEntryView();
             postEntryView.EntryValidation = inputValidator.ValidateEntryText;
             postEntryView.PostEntryCallback = AddEntryToDatabase;
             postEntryView.NextView = GoToUserInterface;
@@ -135,8 +160,13 @@ namespace Guestbook.Core
                 },
                 new NavigationMenuItem()
                 {
-                    //GoesTo = QuitProgram,
+                    GoesTo = GoToLogOutUserView,
                     DisplayString = "log out user"
+                },
+                new NavigationMenuItem()
+                {
+                    GoesTo = QuitProgram,
+                    DisplayString = "quit program"
                 }
             };
         }
@@ -205,28 +235,13 @@ namespace Guestbook.Core
         }
         private void QuitProgram()
         {
-            throw new NotImplementedException();
         }
-
         private IOrderedQueryable<Entry> GetAllEntries()
         {
             return from entry in context.Entries
                         orderby entry.DateOfEntry ascending
                         select entry;
         }
-
-
-        //public void PrintAllEntries(IOrderedQueryable<Entry> entries)
-        //{
-        //    foreach (var entry in entries)
-        //    {
-        //        Console.Write(entry.DateOfEntry.ToString("dddd, dd MMMM yyyy HH:mm:ss"));
-        //        Console.WriteLine($", {entry.Author.Alias} wrote:\n   {entry.EntryText}\n");
-        //    }
-        //}
-
-
-
 
     }
 }
