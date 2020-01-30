@@ -101,31 +101,6 @@ namespace Guestbook.Core
 
             return result;
         }
-        public Result ValidateLogin(Features.Login.Input input)
-        {
-            if (input == null) throw new ArgumentNullException(nameof(input));
-            var result = new Result();
-
-            var query = _context.Authors.Where(a => a.Username == input.Username);
-
-            var author = query.SingleOrDefault();
-
-            if (author == null)
-            {
-                result.Success = false;
-                result.ValidationMessages.Add("Invalid username or password.");
-                return result;
-            }
-
-            if (BCrypt.Net.BCrypt.Verify(input.Password, author.PasswordHash))
-            {
-                result.Success = true;
-                return result;
-            }
-            result.Success = false;
-            result.ValidationMessages.Add("Invalid username or password.");
-            return result;
-        }
         private bool ValidateAliasLength(string alias)
         {
             const int maxAliasLength = 20;

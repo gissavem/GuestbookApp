@@ -30,7 +30,6 @@ namespace Guestbook.Core
         {
             GoToMainMenu();
         }
-
         private void GoToMainMenu()
         {
             InitializeMainMenu();
