@@ -10,6 +10,7 @@ namespace Guestbook.Core
                
         public void Display()
         {
+            Clear();
             Console.WriteLine(Message);
             WaitForKeyPress();
             NextView();

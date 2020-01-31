@@ -7,7 +7,6 @@ namespace Guestbook.Core
     internal class Controller
     {
         private readonly EntryContext context;
-        //private readonly InputValidator inputValidator;
         private LoginView loginView;
         private MultiChoiceMenuView menuView;
         private InfoMessageView messageView;
@@ -18,7 +17,6 @@ namespace Guestbook.Core
         public Controller(EntryContext context)
         {
             this.context = context ?? throw new System.ArgumentNullException(nameof(context));
-            //inputValidator = new InputValidator(context);
         }
         public Author CurrentAuthor { get; set; }
         public void Run() => GoToMainMenu();
@@ -94,6 +92,11 @@ namespace Guestbook.Core
                 },
                 new NavigationMenuItem()
                 {
+                    GoesTo = GoToDisplayUsersEntriesView,
+                    DisplayString = "view all my entries"
+                },
+                new NavigationMenuItem()
+                {
                     GoesTo = GoToLogOutUserView,
                     DisplayString = "log out user"
                 },
@@ -141,6 +144,19 @@ namespace Guestbook.Core
             displayEntriesView = (displayEntriesView is null) ? new DisplayEntriesView() : displayEntriesView;
             displayEntriesView.DisplayMessage = "Displaying all past entries by date in descending order";
             displayEntriesView.Entries = GetAllEntries();
+            displayEntriesView.NextView = GoToUserInterface;
+        }
+        private void GoToDisplayUsersEntriesView()
+        {
+            InitializeDisplayUsersEntriesView();
+            displayEntriesView.Display();
+        }
+
+        private void InitializeDisplayUsersEntriesView()
+        {
+            displayEntriesView = (displayEntriesView is null) ? new DisplayEntriesView() : displayEntriesView;
+            displayEntriesView.DisplayMessage = "Displaying all your entries by date in descending order";
+            displayEntriesView.Entries = GetUsersEntries();
             displayEntriesView.NextView = GoToUserInterface;
         }
         private void GoToLogOutUserView()
@@ -231,10 +247,16 @@ namespace Guestbook.Core
         private void QuitProgram()
         {
         }
-        private IOrderedQueryable<Entry> GetAllEntries() => 
+        private IEnumerable<Entry> GetAllEntries() => 
             from entry in context.Entries
             orderby entry.DateOfEntry ascending
             select entry;
 
+        private IEnumerable<Entry> GetUsersEntries() =>
+            from entry in context.Entries.ToList()
+            where entry.Author.Id == CurrentAuthor.Id
+            orderby entry.DateOfEntry ascending
+            select entry;
+        // query = context.Authors.Where(a => a.Username == input.Username)
     }
 }

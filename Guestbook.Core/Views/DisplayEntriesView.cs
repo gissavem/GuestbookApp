@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Guestbook.Core
 {
     internal class DisplayEntriesView : View
     {
-        public IOrderedQueryable<Entry> Entries { get; set; }
+        public IEnumerable<Entry> Entries { get; set; }
         public string DisplayMessage { get; set; }
         public void Display()
         {
+            Clear();
             Console.WriteLine(DisplayMessage + "\n");
 
             foreach (var entry in Entries)
