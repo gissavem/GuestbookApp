@@ -4,14 +4,13 @@ namespace Guestbook.Core
 {
     internal class PostEntryView : View
     {
-        public Func<string, Result> EntryValidation { get; set; }
         public Action<string> PostEntryCallback { get; set; }
 
         public void Display()
         {
             Clear();
             Console.WriteLine("Please write your entry to the guestbook");
-            var entryText = ValidateInput(EntryValidation);
+            var entryText = ValidateInput(ValidateEntryText);
             PostEntryCallback(entryText);
             Clear();
             WaitForKeyPress();

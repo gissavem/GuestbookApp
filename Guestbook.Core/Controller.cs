@@ -115,9 +115,6 @@ namespace Guestbook.Core
         private void InitializeRegisterUserView()
         {
             registerUserView = (registerUserView is null) ? new RegisterUserView() : registerUserView;
-            registerUserView.UsernameValidation = registerUserView.ValidateUsername;
-            registerUserView.PasswordValidation = registerUserView.ValidatePassword;
-            registerUserView.AliasValidation = registerUserView.ValidateAlias;
             registerUserView.CheckIfUnique = IsUsernameUnique;
             registerUserView.RegisterUserCallback = CreateUser;
             registerUserView.NextView = GoToLoginMenu;
@@ -130,7 +127,6 @@ namespace Guestbook.Core
         private void InitializePostEntryView()
         {
             postEntryView = (postEntryView is null) ? new PostEntryView() : postEntryView;
-            postEntryView.EntryValidation = postEntryView.ValidateEntryText;
             postEntryView.PostEntryCallback = AddEntryToDatabase;
             postEntryView.NextView = GoToUserInterface;
         }
@@ -184,9 +180,9 @@ namespace Guestbook.Core
         private Result IsUsernameUnique(string userName)
         {
             var result = new Result();
-            var query = context.Authors.Where(user => user.Username == userName);
+            var query = context.Authors.SingleOrDefault(user => user.Username == userName);
 
-            result.Success = !query.ToList().Any();
+            result.Success = query == null;
 
             if (result.Success)
             {
@@ -257,6 +253,5 @@ namespace Guestbook.Core
             where entry.Author.Id == CurrentAuthor.Id
             orderby entry.DateOfEntry ascending
             select entry;
-        // query = context.Authors.Where(a => a.Username == input.Username)
     }
 }
