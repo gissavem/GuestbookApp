@@ -5,7 +5,7 @@ namespace Guestbook.Core
     public class View
     {
         private const int MaxEntryTextLength = 140;
-        public Func<string, Result> IsUnique { get; set; }
+        public Func<string, Result> CheckIfUnique { get; set; }
         public Action NextView { get; set; }
         /// <summary>
         /// ReTries the input until the validation method provided returns a successful result. The hideInput paramater hides the input in the console if set to true.
@@ -42,9 +42,9 @@ namespace Guestbook.Core
                 tryAgain = !validationResult.Success;
 
                 var uniqueResult = new Result();
-                if (IsUnique != null)
+                if (CheckIfUnique != null)
                 {
-                    uniqueResult = IsUnique(input);
+                    uniqueResult = CheckIfUnique(input);
                     tryAgain = !uniqueResult.Success;
                 }
 
@@ -58,6 +58,7 @@ namespace Guestbook.Core
                     {
                         Console.WriteLine(message);
                     }
+                    tryAgain = true;
                 }
             } while (tryAgain);
 

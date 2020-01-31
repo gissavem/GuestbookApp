@@ -115,7 +115,7 @@ namespace Guestbook.Core
             registerUserView.UsernameValidation = registerUserView.ValidateUsername;
             registerUserView.PasswordValidation = registerUserView.ValidatePassword;
             registerUserView.AliasValidation = registerUserView.ValidateAlias;
-            registerUserView.IsUnique = UsernameIsUnique;
+            registerUserView.CheckIfUnique = IsUsernameUnique;
             registerUserView.RegisterUserCallback = CreateUser;
             registerUserView.NextView = GoToLoginMenu;
         }
@@ -165,7 +165,7 @@ namespace Guestbook.Core
             context.Authors.Add(author);
             context.SaveChanges();
         }
-        private Result UsernameIsUnique(string userName)
+        private Result IsUsernameUnique(string userName)
         {
             var result = new Result();
             var query = context.Authors.Where(user => user.Username == userName);
@@ -178,7 +178,7 @@ namespace Guestbook.Core
             }
             else
             {
-                result.ValidationMessages.Add("That username is already take, please choose another");
+                result.ValidationMessages.Add("That username is already taken, please choose another");
                 return result;
             }
         }

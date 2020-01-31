@@ -14,6 +14,7 @@ namespace Guestbook.Core
             var input = new RegistrationInput();
             Console.WriteLine("Please enter a username");
             input.Username = ValidateInput(UsernameValidation);
+            CheckIfUnique = null;
             Console.WriteLine("Please enter a password");
             input.Password = ValidateInput(PasswordValidation, true);
             Console.WriteLine("Please enter an alias");
