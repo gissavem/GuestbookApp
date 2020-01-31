@@ -9,6 +9,7 @@ namespace Guestbook.Core
 
         public void Display()
         {
+            Clear();
             Console.WriteLine("Please write your entry to the guestbook");
             var entryText = ValidateInput(EntryValidation);
             PostEntryCallback(entryText);

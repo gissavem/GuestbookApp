@@ -7,7 +7,7 @@ namespace Guestbook.Core
     internal class Controller
     {
         private readonly EntryContext context;
-        private readonly InputValidator inputValidator;
+        //private readonly InputValidator inputValidator;
         private LoginView loginView;
         private MultiChoiceMenuView menuView;
         private InfoMessageView messageView;
@@ -18,7 +18,7 @@ namespace Guestbook.Core
         public Controller(EntryContext context)
         {
             this.context = context ?? throw new System.ArgumentNullException(nameof(context));
-            inputValidator = new InputValidator(context);
+            //inputValidator = new InputValidator(context);
         }
         public Author CurrentAuthor { get; set; }
         public void Run() => GoToMainMenu();
@@ -29,11 +29,9 @@ namespace Guestbook.Core
         }
         private void InitializeMainMenu()
         {
-            messageView = (messageView is null) ? new InfoMessageView()
-            {
-                Message = "Welcome to this guestbook!",
-                NextView = GoToLoginMenu
-            } : messageView;
+            messageView = (messageView is null) ? new InfoMessageView() : messageView;
+            messageView.Message = "Welcome to this guestbook!";
+            messageView.NextView = GoToLoginMenu;
         }
         private void GoToLoginMenu()
         {
@@ -114,9 +112,10 @@ namespace Guestbook.Core
         private void InitializeRegisterUserView()
         {
             registerUserView = (registerUserView is null) ? new RegisterUserView() : registerUserView;
-            registerUserView.UsernameValidation = inputValidator.ValidateUsername;
-            registerUserView.PasswordValidation = inputValidator.ValidatePassword;
-            registerUserView.AliasValidation = inputValidator.ValidateAlias;
+            registerUserView.UsernameValidation = registerUserView.ValidateUsername;
+            registerUserView.PasswordValidation = registerUserView.ValidatePassword;
+            registerUserView.AliasValidation = registerUserView.ValidateAlias;
+            registerUserView.IsUnique = UsernameIsUnique;
             registerUserView.RegisterUserCallback = CreateUser;
             registerUserView.NextView = GoToLoginMenu;
         }
@@ -128,7 +127,7 @@ namespace Guestbook.Core
         private void InitializePostEntryView()
         {
             postEntryView = (postEntryView is null) ? new PostEntryView() : postEntryView;
-            postEntryView.EntryValidation = inputValidator.ValidateEntryText;
+            postEntryView.EntryValidation = postEntryView.ValidateEntryText;
             postEntryView.PostEntryCallback = AddEntryToDatabase;
             postEntryView.NextView = GoToUserInterface;
         }
@@ -153,11 +152,9 @@ namespace Guestbook.Core
         private void InitializeLogOutUserView()
         {
             CurrentAuthor = null;
-            messageView = (messageView is null) ? new InfoMessageView()
-            {
-                Message = "You are now logged out",
-                NextView = GoToMainMenu
-            } : messageView;
+            messageView = (messageView is null) ? new InfoMessageView() : messageView;
+            messageView.Message = "You are now logged out";
+            messageView.NextView = GoToMainMenu;
         }
         private void CreateUser(RegistrationInput input)
         {
@@ -167,6 +164,23 @@ namespace Guestbook.Core
 
             context.Authors.Add(author);
             context.SaveChanges();
+        }
+        private Result UsernameIsUnique(string userName)
+        {
+            var result = new Result();
+            var query = context.Authors.Where(user => user.Username == userName);
+
+            result.Success = !query.ToList().Any();
+
+            if (result.Success)
+            {
+                return result;
+            }
+            else
+            {
+                result.ValidationMessages.Add("That username is already take, please choose another");
+                return result;
+            }
         }
         private Result LoginUser(LoginInput input)
         {
