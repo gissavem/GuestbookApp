@@ -1,5 +1,4 @@
-﻿using Guestbook.Core.Features.Register;
-using System;
+﻿using System;
 
 namespace Guestbook.Core
 {
@@ -9,10 +8,10 @@ namespace Guestbook.Core
         public Func<string, Result> UsernameValidation { get; set; }
         public Func<string, Result> PasswordValidation { get; set; }
         public Func<string, Result> AliasValidation { get; set; }
-        public Action<Input> RegisterUserCallback { get; set; }
+        public Action<RegistrationInput> RegisterUserCallback { get; set; }
         internal void Display()
         {
-            var input = new Input();
+            var input = new RegistrationInput();
             Console.WriteLine("Please enter a username");
             input.Username = ValidateInput(UsernameValidation);
             Console.WriteLine("Please enter a password");

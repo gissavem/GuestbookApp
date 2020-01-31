@@ -1,6 +1,6 @@
-﻿namespace Guestbook.Core.Features.Login //Jätteonödigt med massa namespace
+﻿namespace Guestbook.Core 
 {
-    public class Input
+    public class LoginInput
     {
         public string Username { get; set; }
         public string Password { get; set; }

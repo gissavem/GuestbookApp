@@ -1,7 +1,4 @@
-﻿using Guestbook.Core.Features.Register;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Guestbook.Core
 {
@@ -9,11 +6,11 @@ namespace Guestbook.Core
     {
         public Action LoginSuccessCallback { get; set; }
         public Action LoginFailCallback { get; internal set; }
-        public Func<Features.Login.Input, Result> LoginValidationMethod { get; set; }
+        public Func<LoginInput, Result> LoginValidationMethod { get; set; }
 
         public void Display()
         {
-            var input = new Features.Login.Input()
+            var input = new LoginInput()
             {
                 Username = GetUsername(),
                 Password = GetPassword()

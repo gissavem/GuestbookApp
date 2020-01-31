@@ -1,7 +1,4 @@
-﻿using Guestbook.Core.Entities;
-using Guestbook.Core.Features.Register;
-using System;
-using System.Linq;
+﻿using System;
 
 namespace Guestbook.Core
 {
