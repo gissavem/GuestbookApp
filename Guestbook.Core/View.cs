@@ -48,6 +48,11 @@ namespace Guestbook.Core
 
             return input;
         }
+        protected void WaitForKeyPress()
+        {
+            Console.WriteLine("\nPress any key to continue..");
+            Console.ReadKey(true)
+        }
         protected void Clear()
         {
             Console.Clear();

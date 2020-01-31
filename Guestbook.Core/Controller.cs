@@ -50,7 +50,7 @@ namespace Guestbook.Core
             InitializeUserInterfaceMenu();
             menuView.Display();
         }
-        private void GoToCreateUserView()
+        private void GoToRegisterUserView()
         {
             InitializeRegisterUserView();
             registerUserView.Display();
@@ -131,7 +131,7 @@ namespace Guestbook.Core
                 },
                 new NavigationMenuItem() 
                 {
-                    GoesTo = GoToCreateUserView,
+                    GoesTo = GoToRegisterUserView,
                     DisplayString = "create a new user"
                 },
                 new NavigationMenuItem()

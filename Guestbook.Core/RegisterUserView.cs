@@ -19,6 +19,7 @@ namespace Guestbook.Core
             input.Alias = ValidateInput(AliasValidation);
 
             RegisterUserCallback(input);
+            WaitForKeyPress();
             NextView();
         }
     }

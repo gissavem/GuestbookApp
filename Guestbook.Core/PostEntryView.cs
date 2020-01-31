@@ -13,6 +13,7 @@ namespace Guestbook.Core
             var entryText = ValidateInput(EntryValidation);
             PostEntryCallback(entryText);
             Clear();
+            WaitForKeyPress();
             NextView();
         }
 

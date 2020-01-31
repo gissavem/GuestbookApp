@@ -17,6 +17,7 @@ namespace Guestbook.Core
                 Console.Write(entry.DateOfEntry.ToString("dddd, dd MMMM yyyy HH:mm:ss"));
                 Console.WriteLine($",\n   {entry.Author.Alias} wrote:\n   {entry.EntryText}\n");
             }
+            WaitForKeyPress();
             NextView();
         }
     }

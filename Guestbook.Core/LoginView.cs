@@ -25,8 +25,7 @@ namespace Guestbook.Core
             {
                 Console.WriteLine(message);
             }
-            Console.Write("\npress any key to continue...");
-            Console.ReadKey(true);
+            WaitForKeyPress();
             if (result.Success)
             {
                 LoginSuccessCallback();

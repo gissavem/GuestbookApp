@@ -11,8 +11,7 @@ namespace Guestbook.Core
         public void Display()
         {
             Console.WriteLine(Message);
-            Console.Write("Press any key to continue: ");
-            Console.ReadKey(true);
+            WaitForKeyPress();
             NextView();
         }
     }
