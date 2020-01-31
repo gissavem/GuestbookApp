@@ -22,18 +22,22 @@ namespace Guestbook.Core
         {
             this.context = context ?? throw new System.ArgumentNullException(nameof(context));
             inputValidator = new InputValidator(context);
-
         }
         public Author CurrentAuthor { get; set; }
 
-        public void Run()
-        {
-            GoToMainMenu();
-        }
+        public void Run() => GoToMainMenu();
         private void GoToMainMenu()
         {
             InitializeMainMenu();
             messageView.Display();
+        }
+        private void InitializeMainMenu()
+        {
+            messageView = new InfoMessageView()
+            {
+                Message = "Welcome to this guestbook!",
+                NextView = GoToLoginMenu
+            };
         }
         private void GoToLoginMenu()
         {
@@ -109,19 +113,11 @@ namespace Guestbook.Core
 
         }
 
-        private void InitializeMainMenu()
-        {
-            messageView = new InfoMessageView()
-            {
-                Message = "Welcome to this guestbook!",
-                NextView = GoToLoginMenu
-            };
-        }
 
 
         private void InitializeLoginMenu()
         {
-            menuView = new MultiChoiceMenuView();
+            menuView = (menuView is null) ? new MultiChoiceMenuView() : menuView;
             menuView.MenuItems = new List<NavigationMenuItem>()
             {
                 new NavigationMenuItem()
@@ -235,12 +231,10 @@ namespace Guestbook.Core
         private void QuitProgram()
         {
         }
-        private IOrderedQueryable<Entry> GetAllEntries()
-        {
-            return from entry in context.Entries
-                        orderby entry.DateOfEntry ascending
-                        select entry;
-        }
+        private IOrderedQueryable<Entry> GetAllEntries() => 
+            from entry in context.Entries
+            orderby entry.DateOfEntry ascending
+            select entry;
 
     }
 }

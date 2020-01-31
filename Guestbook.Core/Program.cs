@@ -4,7 +4,7 @@ namespace Guestbook.Core
 {
     class Program
     {
-        void Main()
+        static void Main()
         {
             var context = new EntryContext();
             context.Database.EnsureCreated();

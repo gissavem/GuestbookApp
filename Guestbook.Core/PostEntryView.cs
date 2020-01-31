@@ -1,5 +1,4 @@
-﻿using Guestbook.Core.Features.Entries;
-using System;
+﻿using System;
 
 namespace Guestbook.Core
 {
@@ -10,6 +9,7 @@ namespace Guestbook.Core
 
         public void Display()
         {
+            Console.WriteLine("Please write your entry to the guestbook");
             var entryText = ValidateInput(EntryValidation);
             PostEntryCallback(entryText);
             Clear();

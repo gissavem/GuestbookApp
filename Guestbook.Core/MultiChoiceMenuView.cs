@@ -30,7 +30,7 @@ namespace Guestbook.Core
                 input = Console.ReadKey(true).KeyChar;
                 try
                 {
-                    inputAsInt = (int)input;
+                    inputAsInt = int.Parse(input.ToString());
                 }
                 catch (Exception)
                 {

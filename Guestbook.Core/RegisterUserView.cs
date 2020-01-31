@@ -13,9 +13,11 @@ namespace Guestbook.Core
         internal void Display()
         {
             var input = new Input();
-
+            Console.WriteLine("Please enter a username");
             input.Username = ValidateInput(UsernameValidation);
+            Console.WriteLine("Please enter a password");
             input.Password = ValidateInput(PasswordValidation, true);
+            Console.WriteLine("Please enter an alias");
             input.Alias = ValidateInput(AliasValidation);
 
             RegisterUserCallback(input);

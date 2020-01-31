@@ -8,7 +8,12 @@ namespace Guestbook.Core
     public class View
     {
         public Action NextView { get; set; }
-
+        /// <summary>
+        /// ReTries the input until the validation method provided returns a successful result. The hideInput paramater hides the input in the console if set to true.
+        /// </summary>
+        /// <param name="validation"></param>
+        /// <param name="hideInput"></param>
+        /// <returns></returns>
         public string ValidateInput(Func<string, Result> validation, bool hideInput = false)
         {
             string input;
@@ -51,7 +56,7 @@ namespace Guestbook.Core
         protected void WaitForKeyPress()
         {
             Console.WriteLine("\nPress any key to continue..");
-            Console.ReadKey(true)
+            Console.ReadKey(true);
         }
         protected void Clear()
         {
