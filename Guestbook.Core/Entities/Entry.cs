@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Guestbook.Core.Entities
+namespace Guestbook.Core
 {
     public class Entry
     {

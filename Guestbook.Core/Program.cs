@@ -1,5 +1,4 @@
-﻿using Guestbook.Core.Persistance;
-
+﻿
 namespace Guestbook.Core
 {
     class Program

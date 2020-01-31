@@ -1,7 +1,6 @@
-﻿using Guestbook.Core.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Guestbook.Core.Persistance
+namespace Guestbook.Core
 {
     public class EntryContext : DbContext
     {

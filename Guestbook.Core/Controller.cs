@@ -1,6 +1,4 @@
-﻿using Guestbook.Core.Entities;
-using Guestbook.Core.Persistance;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +21,6 @@ namespace Guestbook.Core
             inputValidator = new InputValidator(context);
         }
         public Author CurrentAuthor { get; set; }
-
         public void Run() => GoToMainMenu();
         private void GoToMainMenu()
         {
@@ -32,11 +29,11 @@ namespace Guestbook.Core
         }
         private void InitializeMainMenu()
         {
-            messageView = new InfoMessageView()
+            messageView = (messageView is null) ? new InfoMessageView()
             {
                 Message = "Welcome to this guestbook!",
                 NextView = GoToLoginMenu
-            };
+            } : messageView;
         }
         private void GoToLoginMenu()
         {
@@ -72,7 +69,7 @@ namespace Guestbook.Core
         }
         private void InitializeLoginView()
         {
-            loginView = new LoginView();
+            loginView = (loginView is null) ? new LoginView() : loginView;
             loginView.LoginValidationMethod = LoginUser;
             loginView.LoginSuccessCallback = GoToUserInterface;
             loginView.LoginFailCallback = GoToLoginMenu;
@@ -84,7 +81,7 @@ namespace Guestbook.Core
         }
         private void InitializeUserInterfaceMenu()
         {
-            menuView = new MultiChoiceMenuView();
+            menuView = (menuView is null) ? new MultiChoiceMenuView() : menuView;
             menuView.MenuItems = new List<NavigationMenuItem>()
             {
                 new NavigationMenuItem()
@@ -116,7 +113,7 @@ namespace Guestbook.Core
         }
         private void InitializeRegisterUserView()
         {
-            registerUserView = new RegisterUserView();
+            registerUserView = (registerUserView is null) ? new RegisterUserView() : registerUserView;
             registerUserView.UsernameValidation = inputValidator.ValidateUsername;
             registerUserView.PasswordValidation = inputValidator.ValidatePassword;
             registerUserView.AliasValidation = inputValidator.ValidateAlias;
@@ -130,7 +127,7 @@ namespace Guestbook.Core
         }
         private void InitializePostEntryView()
         {
-            postEntryView = new PostEntryView();
+            postEntryView = (postEntryView is null) ? new PostEntryView() : postEntryView;
             postEntryView.EntryValidation = inputValidator.ValidateEntryText;
             postEntryView.PostEntryCallback = AddEntryToDatabase;
             postEntryView.NextView = GoToUserInterface;
@@ -142,7 +139,7 @@ namespace Guestbook.Core
         }
         private void InitializeDisplayAllEntriesView()
         {
-            displayEntriesView = new DisplayEntriesView();
+            displayEntriesView = (displayEntriesView is null) ? new DisplayEntriesView() : displayEntriesView;
             displayEntriesView.DisplayMessage = "Displaying all past entries by date in descending order";
             displayEntriesView.Entries = GetAllEntries();
             displayEntriesView.NextView = GoToUserInterface;
@@ -156,11 +153,11 @@ namespace Guestbook.Core
         private void InitializeLogOutUserView()
         {
             CurrentAuthor = null;
-            messageView = new InfoMessageView()
+            messageView = (messageView is null) ? new InfoMessageView()
             {
                 Message = "You are now logged out",
                 NextView = GoToMainMenu
-            };
+            } : messageView;
         }
         private void CreateUser(RegistrationInput input)
         {
